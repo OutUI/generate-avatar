@@ -14,5 +14,5 @@
 # Link
 [https://min.net.cn/guoqing/avatar.html](https://min.net.cn/guoqing/avatar.html)
 
-# Licence
+# License
 MIT
