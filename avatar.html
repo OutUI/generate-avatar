@@ -5,14 +5,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
     <title>国庆头像制作</title>
     <style>
         html,
         body {
             background-color: #d00400;
         }
-
+        
         ul {
             width: 360px;
             margin: 0 auto 30px;
@@ -20,24 +20,25 @@
             list-style: none;
             padding: 0;
         }
-
+        
         ul li {
             width: 25%;
             float: left;
-            padding: 12px; /* 原12 */
+            padding: 12px;
+            /* 原12 */
             box-sizing: border-box;
         }
-
+        
         ul li img {
             width: 100%;
         }
-
+        
         canvas {
             margin: auto;
             display: none;
             background: transparent;
         }
-
+        
         button {
             margin: 30px auto;
             display: block;
@@ -51,31 +52,32 @@
             border: none;
             outline: none;
         }
-        .img-wrapper{
+        
+        .img-wrapper {
             display: flex;
             justify-content: center;
             align-items: center;
         }
-
+        
         .img-wrapper .prev,
         .img-wrapper .next {
-            flex:1 1 auto;
+            flex: 1 1 auto;
             display: block;
             background-image: url(./imgs/arrow-btn.png);
             background-size: contain;
             background-repeat: no-repeat;
             background-position: center left;
             width: 2.8rem;
-            height: 2.8rem;            
+            height: 2.8rem;
             cursor: pointer;
         }
-
+        
         .img-wrapper .prev {
             margin-right: 0.6rem;
             -webkit-transform: rotate(180deg);
             transform: rotate(180deg);
         }
-
+        
         .img {
             width: 230px;
             height: 230px;
@@ -83,210 +85,216 @@
             margin: auto;
             margin-right: 0.6rem;
         }
-
+        
         .cus-text {
             -webkit-user-select: none;
             -moz-user-select: none;
             -ms-user-select: none;
             user-select: none;
         }
-
-        .tip-text{
-            margin-top:10px ;
+        
+        .tip-text {
+            margin-top: 10px;
             text-align: center;
-            font-family:‘Times New Roman’,Georgia,Serif;
+            font-family: ‘Times New Roman’, Georgia, Serif;
             color: white;
         }
-
-        .light{
+        
+        .light {
             color: #ffffffa6;
             font-size: 12px;
         }
-
-        .mt{
+        
+        .mt {
             margin-top: 40px;
         }
-
-        .mt2{
+        
+        .mt2 {
             margin-top: 6px;
         }
     </style>
 </head>
 
 <body>
-<div class="cus-text">
-    <ul>
-        <li><img src="./imgs/avatar-1.png"></li>
-        <li><img src="./imgs/avatar-2.png"></li>
-        <li><img src="./imgs/avatar-3.png"></li>
-        <li><img src="./imgs/avatar-4.png"></li>
-        <li><img src="./imgs/avatar-5.png"></li>
-        <li><img src="./imgs/avatar-6.png"></li>
-        <li><img src="./imgs/avatar-7.png"></li>
-        <li><img src="./imgs/avatar-8.png"></li>
-    </ul>
+    <div class="cus-text">
+        <ul>
+            <li><img src="./imgs/avatar-1.png"></li>
+            <li><img src="./imgs/avatar-2.png"></li>
+            <li><img src="./imgs/avatar-3.png"></li>
+            <li><img src="./imgs/avatar-4.png"></li>
+            <li><img src="./imgs/avatar-5.png"></li>
+            <li><img src="./imgs/avatar-6.png"></li>
+            <li><img src="./imgs/avatar-7.png"></li>
+            <li><img src="./imgs/avatar-8.png"></li>
+        </ul>
 
-    <button id="upload">上传图片</button>
-    <canvas id="canvas" width="300" height="300"></canvas>
-    <div class="img-wrapper">
-        <span class="prev" id="prev"></span>
-        <img src="imgs/avatar-1.png" class="img" id="head">
-        <span class="next" id="next"></span>
+        <button id="upload">上传图片</button>
+        <canvas id="canvas" width="300" height="300"></canvas>
+        <div class="img-wrapper">
+            <span class="prev" id="prev"></span>
+            <img src="imgs/avatar-1.png" class="img" id="head">
+            <span class="next" id="next"></span>
+        </div>
+        <input type="file" accept="image/*" hidden>
+
+        <div class="tip-text" id="tip-download">
+            长按图片保存
+        </div>
+        <button id="download" style="display: none;">保存图片</button>
     </div>
-    <input type="file" accept="image/*" hidden>
-    
-    <div class="tip-text" id="tip-download">
-        长按图片保存
-    </div>
-    <button id="download" style="display: none;">保存图片</button>
-</div>
 
 
 
 
-<div class="tip-text light mt">上传图片数据只保存在本地</div>
-<div class="tip-text light mt2">本程序仅提供生成，不参与用户创作</div>
-<div class="tip-text light mt2">所有由此程序生成的头像导致的违法行为均由用户承担</div>
-<div class="tip-text light mt2">Powered By：min.net.cn</div>
+    <div class="tip-text light mt">上传图片数据只保存在本地</div>
+    <div class="tip-text light mt2">本程序仅提供生成，不参与用户创作</div>
+    <div class="tip-text light mt2">所有由此程序生成的头像导致的违法行为均由用户承担</div>
+    <div class="tip-text light mt2">Powered By：min.net.cn</div>
 
-<script>
-    const ul = document.querySelector('ul')
-    const img = document.querySelectorAll('ul img')
-    const buttonBtn = document.querySelector('#upload')
-    const downloadBtn = document.querySelector('#download')
-    const canvas = document.querySelector('#canvas')
-    const ctx = canvas.getContext('2d')
-    const headImg = document.querySelector('.img')
-    const tipDownload = document.querySelector('#tip-download')
-    const fileUpload = document.querySelector('input')
-    const prev = document.querySelector('#prev')
-    const next = document.querySelector('#next')
-    let upLoadImg
-    let avatarIcon
-    let current = 0
+    <script>
+        const ul = document.querySelector('ul')
+        const img = document.querySelectorAll('ul img')
+        const buttonBtn = document.querySelector('#upload')
+        const downloadBtn = document.querySelector('#download')
+        const canvas = document.querySelector('#canvas')
+        const ctx = canvas.getContext('2d')
+        const headImg = document.querySelector('.img')
+        const tipDownload = document.querySelector('#tip-download')
+        const fileUpload = document.querySelector('input')
+        const prev = document.querySelector('#prev')
+        const next = document.querySelector('#next')
+        let upLoadImg
+        let avatarIcon
+        let current = 0
 
-    function isPC() {
-        if ((navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i))) {
-            return false;
-        }
-        else {
-            return true;
-        }
-    }
-
-    if(isPC()){
-        downloadBtn.style.display = "block"
-        tipDownload.style.display = "none"
-    } else {
-        downloadBtn.style.display = "none"
-        tipDownload.style.display = "block"
-    }
-
-    // 画canvas
-    function drawImage(img) {
-        ctx.drawImage(img, 0, 0, 300, 300)
-    }
-
-    // 清空canvas
-    function resetCanvas() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height)
-        ctx.fillStyle = 'rgba(255, 255, 255, 0)'
-    }
-
-    function canvasToImg() {
-        headImg.src = canvas.toDataURL("image/png")
-    }
-
-    // 点击icon
-    ul.addEventListener('click', function (event) {
-        if (event.target.nodeName.toLowerCase() === 'img') {
-            resetCanvas()
-            upLoadImg && drawImage(upLoadImg)
-            drawImage(event.target)
-            canvasToImg()
-            avatarIcon = event.target 
-        }
-    })
-    // 上传图片
-    buttonBtn.addEventListener('click', function () {
-        fileUpload.click()
-    })
-    // 保存图片
-    downloadBtn.addEventListener('click', function () {
-        var myBlob = dataURLtoBlob(headImg.src)
-        var myUrl = URL.createObjectURL(myBlob)
-        downloadFile(myUrl,name)
-    })
-
-     // 上一个
-     prev.addEventListener('click', function () {
-        current--;
-        if(current < 0){
-            current = 5;            
-        }
-        resetCanvas()
-        upLoadImg && drawImage(upLoadImg)
-        drawImage(img[current])
-        avatarIcon = img[current]
-        canvasToImg()
-
-    })
-
-     // 下一个
-     next.addEventListener('click', function () {
-        current++;
-        if(current >5 ){
-            current = 0;            
-        }
-        resetCanvas()
-        upLoadImg && drawImage(upLoadImg)
-        drawImage(img[current])
-        avatarIcon = img[current]
-        canvasToImg()
-    })
-    
-    function downloadFile(url,name='love_china'){
-        var a = document.createElement("a")
-        a.setAttribute("href",url)
-        a.setAttribute("download",name)
-        a.setAttribute("target","_blank")
-        let clickEvent = document.createEvent("MouseEvents");
-        clickEvent.initEvent("click", true, true);  
-        a.dispatchEvent(clickEvent);
-    }
-
-    function dataURLtoBlob(dataurl) {
-        var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
-            bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
-        while (n--) {
-            u8arr[n] = bstr.charCodeAt(n);
-        }
-        return new Blob([u8arr], { type: mime });
-    }
-
-    // 监听文件变化
-    fileUpload.addEventListener('change', function () {
-        reader = new FileReader();  
-        reader.onload = function(){
-            const img = new Image()
-            img.src = reader.result;
-            img.onload = function () {
-                drawImage(img)
-                drawImage(avatarIcon)
-                canvasToImg()
-                upLoadImg = img
+        function isPC() {
+            if ((navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i))) {
+                return false;
+            } else {
+                return true;
             }
         }
-        reader.readAsDataURL(this.files[0]);
-    })
-    
-    img[0].onload = function () {
-        drawImage(img[0])
-        avatarIcon = img[0]
-        canvasToImg()
-    }
-</script>
-<div style="display: none;"><script type="text/javascript" src="https://s23.cnzz.com/z_stat.php?id=1276295981&web_id=1276295981"></script></div>
+
+        if (isPC()) {
+            downloadBtn.style.display = "block"
+            tipDownload.style.display = "none"
+        } else {
+            downloadBtn.style.display = "none"
+            tipDownload.style.display = "block"
+        }
+
+        // 画canvas
+        function drawImage(img) {
+            ctx.drawImage(img, 0, 0, 300, 300)
+        }
+
+        // 清空canvas
+        function resetCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height)
+            ctx.fillStyle = 'rgba(255, 255, 255, 0)'
+        }
+
+        function canvasToImg() {
+            headImg.src = canvas.toDataURL("image/png")
+        }
+
+        // 点击icon
+        ul.addEventListener('click', function(event) {
+                if (event.target.nodeName.toLowerCase() === 'img') {
+                    resetCanvas()
+                    upLoadImg && drawImage(upLoadImg)
+                    drawImage(event.target)
+                    canvasToImg()
+                    avatarIcon = event.target
+                }
+            })
+            // 上传图片
+        buttonBtn.addEventListener('click', function() {
+                fileUpload.click()
+            })
+            // 保存图片
+        downloadBtn.addEventListener('click', function() {
+            var myBlob = dataURLtoBlob(headImg.src)
+            var myUrl = URL.createObjectURL(myBlob)
+            downloadFile(myUrl, name)
+        })
+
+        // 上一个
+        prev.addEventListener('click', function() {
+            current--;
+            if (current < 0) {
+                current = 5;
+            }
+            resetCanvas()
+            upLoadImg && drawImage(upLoadImg)
+            drawImage(img[current])
+            avatarIcon = img[current]
+            canvasToImg()
+
+        })
+
+        // 下一个
+        next.addEventListener('click', function() {
+            current++;
+            if (current > 5) {
+                current = 0;
+            }
+            resetCanvas()
+            upLoadImg && drawImage(upLoadImg)
+            drawImage(img[current])
+            avatarIcon = img[current]
+            canvasToImg()
+        })
+
+        function downloadFile(url, name = 'love_china') {
+            var a = document.createElement("a")
+            a.setAttribute("href", url)
+            a.setAttribute("download", name)
+            a.setAttribute("target", "_blank")
+            let clickEvent = document.createEvent("MouseEvents");
+            clickEvent.initEvent("click", true, true);
+            a.dispatchEvent(clickEvent);
+        }
+
+        function dataURLtoBlob(dataurl) {
+            var arr = dataurl.split(','),
+                mime = arr[0].match(/:(.*?);/)[1],
+                bstr = atob(arr[1]),
+                n = bstr.length,
+                u8arr = new Uint8Array(n);
+            while (n--) {
+                u8arr[n] = bstr.charCodeAt(n);
+            }
+            return new Blob([u8arr], {
+                type: mime
+            });
+        }
+
+        // 监听文件变化
+        fileUpload.addEventListener('change', function() {
+            reader = new FileReader();
+            reader.onload = function() {
+                const img = new Image()
+                img.src = reader.result;
+                img.onload = function() {
+                    drawImage(img)
+                    drawImage(avatarIcon)
+                    canvasToImg()
+                    upLoadImg = img
+                }
+            }
+            reader.readAsDataURL(this.files[0]);
+        })
+
+        img[0].onload = function() {
+            drawImage(img[0])
+            avatarIcon = img[0]
+            canvasToImg()
+        }
+    </script>
+    <div style="display: none;">
+        <script type="text/javascript" src="https://s23.cnzz.com/z_stat.php?id=1276295981&web_id=1276295981"></script>
+    </div>
 </body>
 
 </html>
