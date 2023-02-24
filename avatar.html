@@ -7,10 +7,17 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
     <title>国庆头像制作</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" integrity="sha512-cyzxRvewl+FOKTtpBzYjW6x6IAYUCZy3sGP40hn+DQkqeluGRCax7qztK2ImL64SA+C7kVWdLI6wvdlStawhyw==" crossorigin="anonymous" referrerpolicy="no-referrer"
+    />
     <style>
         html,
         body {
             background-color: #d00400;
+        }
+        
+        body {
+            position: relative;
+            margin: 0;
         }
         
         ul {
@@ -112,6 +119,35 @@
         .mt2 {
             margin-top: 6px;
         }
+        
+        .crop-img {
+            display: none;
+            position: absolute;
+            top: 0;
+            margin: 0 auto;
+            padding-top: 20px;
+            width: 100%;
+            height: 100vh;
+            text-align: center;
+            background: #fff;
+        }
+        
+        .crop-img .img-container {
+            margin: 0 auto;
+            max-width: 350px;
+            max-height: 350px;
+        }
+        
+        .crop-img img {
+            margin: 0 auto;
+        }
+        
+        .crop-img .crop-btn {
+            width: 120px;
+            height: 30px;
+            font-size: 12px;
+            display: block
+        }
     </style>
 </head>
 
@@ -142,6 +178,13 @@
         </div>
         <button id="download" style="display: none;">保存图片</button>
     </div>
+    <div class="crop-img" id="crop-img">
+        <div class="img-container">
+            <img src="" alt="" class="clip-img" id="clip-img">
+        </div>
+
+        <button class="crop-btn" id="crop-ok">确定</button>
+    </div>
 
 
 
@@ -151,10 +194,11 @@
     <div class="tip-text light mt2">所有由此程序生成的头像导致的违法行为均由用户承担</div>
     <div class="tip-text light mt2">Powered By：min.net.cn</div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js" integrity="sha512-6lplKUSl86rUVprDIjiW8DuOniNX8UDoRATqZSds/7t6zCQZfaCe3e5zcGaQwxa8Kpn5RTM9Fvl3X2lLV4grPQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
         const ul = document.querySelector('ul')
         const img = document.querySelectorAll('ul img')
-        const buttonBtn = document.querySelector('#upload')
+        const uploadBtn = document.querySelector('#upload')
         const downloadBtn = document.querySelector('#download')
         const canvas = document.querySelector('#canvas')
         const ctx = canvas.getContext('2d')
@@ -163,6 +207,9 @@
         const fileUpload = document.querySelector('input')
         const prev = document.querySelector('#prev')
         const next = document.querySelector('#next')
+        const cropImg = document.querySelector('#crop-img')
+        const cropOk = document.querySelector('#crop-ok')
+        const clipImg = document.querySelector('#clip-img')
         let upLoadImg
         let avatarIcon
         let current = 0
@@ -209,8 +256,8 @@
                 }
             })
             // 上传图片
-        buttonBtn.addEventListener('click', function() {
-                fileUpload.click()
+        uploadBtn.addEventListener('click', function() {
+                fileUpload.click();
             })
             // 保存图片
         downloadBtn.addEventListener('click', function() {
@@ -246,6 +293,8 @@
             canvasToImg()
         })
 
+
+
         function downloadFile(url, name = 'love_china') {
             var a = document.createElement("a")
             a.setAttribute("href", url)
@@ -270,30 +319,103 @@
             });
         }
 
-        // 监听文件变化
-        fileUpload.addEventListener('change', function() {
-            reader = new FileReader();
-            reader.onload = function() {
-                const img = new Image()
-                img.src = reader.result;
-                img.onload = function() {
-                    drawImage(img)
-                    drawImage(avatarIcon)
-                    canvasToImg()
-                    upLoadImg = img
-                }
-            }
-            reader.readAsDataURL(this.files[0]);
-        })
-
         img[0].onload = function() {
             drawImage(img[0])
             avatarIcon = img[0]
             canvasToImg()
         }
+        loadClipImg()
+
+        function loadClipImg() {
+
+            window.addEventListener('DOMContentLoaded', function() {
+                fileUpload.addEventListener('change', function() {
+                    reader = new FileReader();
+                    reader.onload = function() {
+                        cropImg.style.display = 'block'
+                        clipImg.src = reader.result
+                        iniCropper()
+                    }
+                    reader.readAsDataURL(this.files[0]);
+                })
+
+                function getRoundedCanvas(sourceCanvas) {
+                    var canvas = document.createElement('canvas');
+                    var context = canvas.getContext('2d');
+                    var width = sourceCanvas.width;
+                    var height = sourceCanvas.height;
+
+                    canvas.width = width;
+                    canvas.height = height;
+                    context.imageSmoothingEnabled = true;
+                    context.drawImage(sourceCanvas, 0, 0, width, height);
+                    context.fill();
+                    return canvas;
+                }
+
+
+                function iniCropper() {
+                    var image = document.querySelector('#clip-img');
+                    var minAspectRatio = 0.5;
+                    var maxAspectRatio = 1.5;
+                    var croppable = false;
+                    var cropper = new Cropper(image, {
+                        aspectRatio: 1,
+                        viewMode: 1,
+                        ready: function() {
+                            croppable = true;
+                        },
+                    });
+
+
+                    cropOk.onclick = function() {
+                        var croppedCanvas;
+                        var roundedCanvas;
+                        var roundedImage;
+
+                        if (!croppable) {
+                            return;
+                        }
+
+                        // Crop
+                        croppedCanvas = cropper.getCroppedCanvas();
+
+                        // Round
+                        roundedCanvas = getRoundedCanvas(croppedCanvas);
+
+                        const img = new Image()
+                        img.src = roundedCanvas.toDataURL();
+                        img.onload = function() {
+                            drawImage(img)
+                            drawImage(avatarIcon)
+                            canvasToImg()
+                            upLoadImg = img
+
+                        }
+
+                        fileUpload.value = '';
+                        clipImg.src = '';
+                        cropImg.style.display = 'none';
+                        cropper.reset();
+                        cropper.destroy();
+                    };
+                };
+
+            })
+
+        }
     </script>
     <div style="display: none;">
-        <script type="text/javascript" src="https://s23.cnzz.com/z_stat.php?id=1276295981&web_id=1276295981"></script>
+        <script>
+            var _hmt = _hmt || [];
+            (function() {
+                var hm = document.createElement("script");
+                hm.src = "https://hm.baidu.com/hm.js?bf487cc6fa96debe3fb8e2713666d04d";
+                var s = document.getElementsByTagName("script")[0];
+                s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+
     </div>
 </body>
 
