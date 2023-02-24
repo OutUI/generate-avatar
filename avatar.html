@@ -387,7 +387,7 @@
                         img.src = roundedCanvas.toDataURL();
                         img.onload = function() {
                             drawImage(img)
-                            drawImage(avatarIcon)
+                            avatarIcon && drawImage(avatarIcon)
                             canvasToImg()
                             upLoadImg = img
 
