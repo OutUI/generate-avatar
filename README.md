@@ -12,8 +12,6 @@
 # Demo 
 ![](imgs/demo.png)
 
-![](imgs/demo2.jpg)
-
 # Link
 [https://min.net.cn/guoqing/avatar.html](https://min.net.cn/guoqing/avatar.html)
 
